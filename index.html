@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  <title>2026年度 2Q 教養科目シラバス | 神戸大学 電気電子工学科</title>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <header class="site-header">
+    <h1>2026年度 2Q 教養科目シラバス</h1>
+    <p class="subtitle">神戸大学 電気電子工学科 全学共通授業科目</p>
+  </header>
+
+  <section class="controls">
+    <div class="search">
+      <input type="search" id="search-input" placeholder="科目名・教員・コード・テーマで検索…" autocomplete="off">
+      <button type="button" class="search-clear" id="search-clear" aria-label="クリア" hidden>×</button>
+    </div>
+    <div class="filters" aria-label="カテゴリフィルタ">
+      <button type="button" class="filter-btn active" data-cat="all">すべて</button>
+      <button type="button" class="filter-btn" data-cat="人文系">人文</button>
+      <button type="button" class="filter-btn" data-cat="社会系">社会</button>
+      <button type="button" class="filter-btn" data-cat="総合系">総合</button>
+    </div>
+  </section>
+
+  <nav class="day-tabs" id="day-tabs" aria-label="曜日切替（スマホ表示用）">
+    <button type="button" class="day-tab active" data-day="月">月</button>
+    <button type="button" class="day-tab" data-day="火">火</button>
+    <button type="button" class="day-tab" data-day="水">水</button>
+    <button type="button" class="day-tab" data-day="木">木</button>
+    <button type="button" class="day-tab" data-day="金">金</button>
+  </nav>
+
+  <main>
+    <section class="timetable-wrap">
+      <h2 class="section-title">週の時間割</h2>
+      <div class="timetable" id="timetable" data-active-day="月" role="grid" aria-label="時間割">
+        <div class="th th-corner"></div>
+        <div class="th th-day col-月" data-day="月">月</div>
+        <div class="th th-day col-火" data-day="火">火</div>
+        <div class="th th-day col-水" data-day="水">水</div>
+        <div class="th th-day col-木" data-day="木">木</div>
+        <div class="th th-day col-金" data-day="金">金</div>
+
+        <!-- セルは app.js が動的に生成 -->
+      </div>
+      <p class="empty-msg" id="timetable-empty" hidden>該当する科目はありません</p>
+    </section>
+
+    <section class="intensive-wrap">
+      <h2 class="section-title">集中講義・特殊枠</h2>
+      <div class="intensive" id="intensive"></div>
+      <p class="empty-msg" id="intensive-empty" hidden>該当する科目はありません</p>
+    </section>
+  </main>
+
+  <dialog id="course-modal" class="modal">
+    <button type="button" class="modal-close" aria-label="閉じる">×</button>
+    <div class="modal-body" id="modal-body"></div>
+  </dialog>
+
+  <footer class="site-footer">
+    <p>参照元: <a href="https://kym22-web.ofc.kobe-u.ac.jp/kobe_syllabus/2026/20/" target="_blank" rel="noopener">神戸大学 シラバスシステム</a>（2026年4月16日時点）</p>
+  </footer>
+
+  <script src="app.js?v=2"></script>
+</body>
+</html>
