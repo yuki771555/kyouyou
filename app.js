@@ -201,19 +201,126 @@ function applyCategory() {
 function setupSearch() {
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
+  const suggest = document.getElementById('suggest');
+  let activeIdx = -1;
 
   const update = () => {
     searchQuery = input.value.trim().toLowerCase();
     clearBtn.hidden = !searchQuery;
     document.body.classList.toggle('searching', !!searchQuery);
     applySearch();
+    activeIdx = -1;
+    renderSuggest();
+  };
+
+  const renderSuggest = () => {
+    if (!searchQuery || document.activeElement !== input) {
+      suggest.hidden = true;
+      suggest.innerHTML = '';
+      return;
+    }
+    const matches = allCourses.filter(c =>
+      [c.name, c.teacher, c.code].some(v => v.toLowerCase().includes(searchQuery))
+    ).slice(0, 8);
+
+    if (matches.length === 0) {
+      suggest.innerHTML = `<li class="s-empty">該当する科目はありません</li>`;
+    } else {
+      suggest.innerHTML = matches.map((c, i) => `
+        <li role="option" data-code="${escapeHtml(c.code)}" class="cat-${c.category}" data-idx="${i}">
+          <span class="s-name">${highlight(c.name, searchQuery)}</span>
+          <span class="s-meta">${escapeHtml(c.slotRaw)}　${escapeHtml(c.teacher)}　${escapeHtml(c.code)}</span>
+        </li>
+      `).join('');
+    }
+    suggest.hidden = false;
+
+    suggest.querySelectorAll('li[data-code]').forEach(li => {
+      li.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // input の blur を防ぐ
+        focusCourse(li.dataset.code);
+      });
+    });
   };
 
   input.addEventListener('input', update);
+  input.addEventListener('focus', renderSuggest);
+  input.addEventListener('blur', () => {
+    setTimeout(() => { suggest.hidden = true; }, 150);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    const items = suggest.querySelectorAll('li[data-code]');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      activeIdx = (activeIdx + 1) % items.length;
+      updateActive(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIdx = (activeIdx - 1 + items.length) % items.length;
+      updateActive(items);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const target = activeIdx >= 0 ? items[activeIdx] : items[0];
+      if (target) focusCourse(target.dataset.code);
+    } else if (e.key === 'Escape') {
+      suggest.hidden = true;
+      input.blur();
+    }
+  });
+
+  const updateActive = (items) => {
+    items.forEach((li, i) => li.classList.toggle('active', i === activeIdx));
+    if (activeIdx >= 0) items[activeIdx].scrollIntoView({ block: 'nearest' });
+  };
+
   clearBtn.addEventListener('click', () => {
     input.value = '';
     update();
     input.focus();
+  });
+}
+
+function highlight(text, query) {
+  const escaped = escapeHtml(text);
+  if (!query) return escaped;
+  const lower = text.toLowerCase();
+  const idx = lower.indexOf(query);
+  if (idx === -1) return escaped;
+  const before = escapeHtml(text.slice(0, idx));
+  const match = escapeHtml(text.slice(idx, idx + query.length));
+  const after = escapeHtml(text.slice(idx + query.length));
+  return `${before}<mark>${match}</mark>${after}`;
+}
+
+function focusCourse(code) {
+  const course = allCourses.find(c => c.code === code);
+  if (!course) return;
+
+  // 検索状態をクリア
+  const input = document.getElementById('search-input');
+  input.value = '';
+  searchQuery = '';
+  document.getElementById('search-clear').hidden = true;
+  document.body.classList.remove('searching');
+  document.getElementById('suggest').hidden = true;
+  applySearch();
+
+  // モバイル時は曜日タブを切り替え
+  if (course.day && window.innerWidth <= 720) {
+    document.querySelector(`.day-tab[data-day="${course.day}"]`)?.click();
+  }
+
+  // カード位置にスクロール + ハイライト
+  requestAnimationFrame(() => {
+    const card = document.querySelector(`.card[data-code="${code}"]`);
+    if (!card) return;
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.remove('highlight');
+    void card.offsetWidth; // reflow
+    card.classList.add('highlight');
+    setTimeout(() => card.classList.remove('highlight'), 1700);
   });
 }
 
