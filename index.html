@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <header class="site-header">
@@ -29,6 +29,7 @@
       <input type="search" id="search-input" placeholder="科目名・教員・コード・テーマで検索…" autocomplete="off" spellcheck="false">
       <kbd class="search-key" id="search-key">/</kbd>
       <button type="button" class="search-clear" id="search-clear" aria-label="クリア" hidden>×</button>
+      <span class="search-count" id="search-count" aria-live="polite" hidden>0件</span>
       <ul class="suggest" id="suggest" role="listbox" hidden></ul>
     </div>
     <div class="filters" role="tablist" aria-label="カテゴリフィルタ">
@@ -146,6 +147,6 @@
     <p>参照元 <a href="https://kym22-web.ofc.kobe-u.ac.jp/kobe_syllabus/2026/20/" target="_blank" rel="noopener">神戸大学 シラバスシステム</a> ／ 2026年4月16日時点</p>
   </footer>
 
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

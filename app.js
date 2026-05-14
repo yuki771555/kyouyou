@@ -13,8 +13,11 @@ const ICON_INBOX = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" 
 
 let allCourses = [];
 let coursesByCode = new Map();
+let searchIndex = [];
+let searchResults = [];
 let activeCategory = 'all';
 let searchQuery = '';
+let searchTokens = [];
 let selected = new Set();
 
 // ===================================================
@@ -143,7 +146,6 @@ function buildCard(c) {
   const card = document.createElement('div');
   card.className = `card cat-${c.category}`;
   card.dataset.code = c.code;
-  card.dataset.searchText = [c.name, c.teacher, c.code, c.theme, c.category].join(' ').toLowerCase();
 
   const noteHtml = c.note ? `<span class="note-tag">${escapeHtml(c.note)}</span>` : '';
   card.innerHTML = `
@@ -248,16 +250,97 @@ function applyCategory() {
   });
 }
 
+function buildSearchIndex(courses) {
+  return courses.map((course, order) => {
+    const fields = {
+      name: normalizeSearchText(course.name),
+      code: normalizeSearchText(course.code),
+      teacher: normalizeSearchText(course.teacher),
+      slot: normalizeSearchText(course.slotRaw),
+      category: normalizeSearchText(course.category),
+      theme: normalizeSearchText(course.theme),
+      goal: normalizeSearchText(course.goal),
+      grading: normalizeSearchText(course.grading),
+    };
+    return {
+      course,
+      order,
+      fields,
+      text: Object.values(fields).join(' '),
+    };
+  });
+}
+
+function normalizeSearchText(value) {
+  return String(value ?? '')
+    .normalize('NFKC')
+    .trim()
+    .toLowerCase()
+    .replace(/[\u30a1-\u30f6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+    .replace(/\s+/g, ' ');
+}
+
+function tokenizeSearch(query) {
+  return normalizeSearchText(query).split(' ').filter(Boolean);
+}
+
+function findSearchResults(query) {
+  const tokens = tokenizeSearch(query);
+  if (tokens.length === 0) return { tokens, results: [] };
+
+  const results = searchIndex
+    .map(entry => {
+      if (!tokens.every(token => entry.text.includes(token))) return null;
+      return {
+        course: entry.course,
+        score: scoreSearchEntry(entry, tokens),
+        order: entry.order,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score || a.order - b.order);
+
+  return { tokens, results };
+}
+
+function scoreSearchEntry(entry, tokens) {
+  return tokens.reduce((sum, token) => {
+    let tokenScore = 0;
+    tokenScore += fieldScore(entry.fields.code, token, 120);
+    tokenScore += fieldScore(entry.fields.name, token, 100);
+    tokenScore += fieldScore(entry.fields.teacher, token, 70);
+    tokenScore += fieldScore(entry.fields.slot, token, 60);
+    tokenScore += fieldScore(entry.fields.category, token, 35);
+    tokenScore += fieldScore(entry.fields.theme, token, 28);
+    tokenScore += fieldScore(entry.fields.goal, token, 18);
+    tokenScore += fieldScore(entry.fields.grading, token, 12);
+    return sum + tokenScore;
+  }, 0);
+}
+
+function fieldScore(value, token, weight) {
+  if (!value || !value.includes(token)) return 0;
+  if (value === token) return weight + 40;
+  if (value.startsWith(token)) return weight + 18;
+  return weight;
+}
+
 function setupSearch() {
   const wrapper = document.querySelector('.search');
   const input = document.getElementById('search-input');
   const clearBtn = document.getElementById('search-clear');
+  const count = document.getElementById('search-count');
   const suggest = document.getElementById('suggest');
   let activeIdx = -1;
 
   const update = () => {
-    searchQuery = input.value.trim().toLowerCase();
+    searchQuery = input.value.trim();
+    const found = findSearchResults(searchQuery);
+    searchTokens = found.tokens;
+    searchResults = found.results;
     clearBtn.hidden = !searchQuery;
+    count.hidden = !searchQuery;
+    count.textContent = `${searchResults.length}件`;
     wrapper.classList.toggle('has-value', !!searchQuery);
     document.body.classList.toggle('searching', !!searchQuery);
     applySearch();
@@ -271,17 +354,19 @@ function setupSearch() {
       suggest.innerHTML = '';
       return;
     }
-    const matches = allCourses.filter(c =>
-      [c.name, c.teacher, c.code].some(v => v.toLowerCase().includes(searchQuery))
-    ).slice(0, 8);
+    const matches = searchResults.slice(0, 8).map(result => result.course);
 
     if (matches.length === 0) {
       suggest.innerHTML = `<li class="s-empty">該当する科目はありません</li>`;
     } else {
       suggest.innerHTML = matches.map((c, i) => `
         <li role="option" data-code="${escapeHtml(c.code)}" class="cat-${c.category}" data-idx="${i}">
-          <span class="s-name">${highlight(c.name, searchQuery)}</span>
-          <span class="s-meta">${escapeHtml(c.slotRaw)} · ${escapeHtml(c.code)}</span>
+          <span class="s-name">${highlight(c.name, searchTokens)}</span>
+          <span class="s-meta">
+            <span>${escapeHtml(c.slotRaw)}</span>
+            <span>${escapeHtml(c.code)}</span>
+            <span>${escapeHtml(c.teacher)}</span>
+          </span>
         </li>
       `).join('');
     }
@@ -338,13 +423,16 @@ function setupSearch() {
 
 function highlight(text, query) {
   const escaped = escapeHtml(text);
-  if (!query) return escaped;
-  const lower = text.toLowerCase();
-  const idx = lower.indexOf(query);
+  const tokens = Array.isArray(query) ? query : tokenizeSearch(query);
+  const token = tokens.find(t => normalizeSearchText(text).includes(t));
+  if (!token) return escaped;
+
+  const normalizedText = normalizeSearchText(text);
+  const idx = normalizedText.indexOf(token);
   if (idx === -1) return escaped;
   const before = escapeHtml(text.slice(0, idx));
-  const match = escapeHtml(text.slice(idx, idx + query.length));
-  const after = escapeHtml(text.slice(idx + query.length));
+  const match = escapeHtml(text.slice(idx, idx + token.length));
+  const after = escapeHtml(text.slice(idx + token.length));
   return `${before}<mark>${match}</mark>${after}`;
 }
 
@@ -356,7 +444,10 @@ function focusCourse(code) {
   const input = document.getElementById('search-input');
   input.value = '';
   searchQuery = '';
+  searchTokens = [];
+  searchResults = [];
   document.getElementById('search-clear').hidden = true;
+  document.getElementById('search-count').hidden = true;
   document.body.classList.remove('searching');
   wrapper.classList.remove('has-value');
   document.getElementById('suggest').hidden = true;
@@ -379,11 +470,12 @@ function focusCourse(code) {
 
 function applySearch() {
   const cards = document.querySelectorAll('.card');
+  const resultCodes = new Set(searchResults.map(result => result.course.code));
   let timetableHits = 0;
   let intensiveHits = 0;
 
   cards.forEach(card => {
-    const match = !searchQuery || card.dataset.searchText.includes(searchQuery);
+    const match = !searchQuery || resultCodes.has(card.dataset.code);
     card.classList.toggle('search-hidden', !match);
     if (match) {
       if (card.parentElement.classList.contains('cell')) timetableHits++;
@@ -749,6 +841,7 @@ async function main() {
     const md = await res.text();
     allCourses = parseSyllabus(md);
     coursesByCode = new Map(allCourses.map(c => [c.code, c]));
+    searchIndex = buildSearchIndex(allCourses);
     console.log(`Loaded ${allCourses.length} courses`);
 
     // Load saved schedule, then ingest URL param (merges in)

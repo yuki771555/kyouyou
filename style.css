@@ -147,7 +147,7 @@ button { font: inherit; cursor: pointer; color: inherit; }
 .search input {
   width: 100%;
   height: 34px;
-  padding: 0 56px 0 32px;
+  padding: 0 92px 0 32px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
@@ -202,6 +202,20 @@ button { font: inherit; cursor: pointer; color: inherit; }
   cursor: pointer;
 }
 .search-clear:hover { background: var(--text); color: #fff; }
+.search-count {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 50px;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+  pointer-events: none;
+}
 
 /* Suggest dropdown */
 .suggest {
@@ -251,6 +265,14 @@ button { font: inherit; cursor: pointer; color: inherit; }
   color: var(--text-3);
   white-space: nowrap;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.suggest .s-meta span + span::before {
+  content: "·";
+  margin-right: 6px;
+  color: var(--text-4);
 }
 .suggest mark {
   background: #fff3a3;
@@ -1249,7 +1271,7 @@ body.searching .cell:empty::after { content: none; }
     top: 0;
   }
   .search { max-width: none; flex: none; }
-  .search input { height: 38px; font-size: 14.5px; padding: 0 38px 0 32px; }
+  .search input { height: 38px; font-size: 14.5px; padding: 0 92px 0 32px; }
   .search-key { display: none; }
 
   .filters {
