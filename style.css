@@ -1,21 +1,49 @@
+/* =====================================================
+   kyouyou — Notion/Linear monochrome
+   Design tokens
+   ===================================================== */
 :root {
-  --bg: #f6f7fb;
-  --surface: #ffffff;
-  --text: #1f2330;
-  --text-sub: #5b6172;
-  --border: #e3e6ef;
-  --accent: #2563eb;
+  /* Surfaces */
+  --bg:            #fafaf9;
+  --surface:       #ffffff;
+  --surface-2:     #f5f5f4;
+  --surface-3:     #ebebe9;
 
-  --cat-humanities: #4f8cff;
-  --cat-humanities-bg: #e8f0ff;
-  --cat-social: #2bb673;
-  --cat-social-bg: #e4f6ec;
-  --cat-general: #f59e0b;
-  --cat-general-bg: #fdf1dc;
+  /* Text */
+  --text:          #1d1d1f;
+  --text-2:        #4a4a4f;
+  --text-3:        #8c8c92;
+  --text-4:        #c2c2c6;
 
-  --shadow-sm: 0 1px 2px rgba(20, 30, 60, 0.06);
-  --shadow-md: 0 4px 14px rgba(20, 30, 60, 0.10);
-  --radius: 10px;
+  /* Lines */
+  --border:        #e7e7e5;
+  --border-2:      #ededec;
+  --border-strong: #d4d4d2;
+
+  /* Accent (single, monochrome) */
+  --accent:        #1d1d1f;
+  --accent-hover:  #38383b;
+  --focus-ring:    rgba(29, 29, 31, 0.10);
+
+  /* Category accents — used as small dots / 2px stripes, never as fills */
+  --cat-humanities: #8b5cf6;   /* 人文系 */
+  --cat-social:     #10b981;   /* 社会系 */
+  --cat-general:    #f59e0b;   /* 総合系 */
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius:    8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Shadows — Linear-quiet */
+  --shadow-xs: 0 1px 2px rgba(17, 17, 19, 0.04);
+  --shadow-sm: 0 2px 6px rgba(17, 17, 19, 0.05), 0 1px 2px rgba(17, 17, 19, 0.04);
+  --shadow:    0 8px 24px rgba(17, 17, 19, 0.08), 0 2px 4px rgba(17, 17, 19, 0.04);
+  --shadow-lg: 0 24px 60px rgba(17, 17, 19, 0.18), 0 4px 12px rgba(17, 17, 19, 0.06);
+
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * {
@@ -28,69 +56,133 @@ html, body {
   padding: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
-    "Yu Gothic UI", "Meiryo", sans-serif;
+  font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
+  font-feature-settings: "palt";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
 }
+body { overflow-x: hidden; }
 
-a { color: var(--accent); text-decoration: none; }
+a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; }
+button { font: inherit; cursor: pointer; color: inherit; }
 
-button { font: inherit; }
-
-/* ===== Header ===== */
+/* =====================================================
+   Header
+   ===================================================== */
 .site-header {
-  padding: 24px 24px 18px;
-  background: linear-gradient(135deg, #2563eb 0%, #6d4dff 100%);
-  color: #fff;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-2);
+}
+.site-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 28px 22px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--text);
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-mark::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--surface);
 }
 .site-header h1 {
-  margin: 0 0 4px;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  margin: 0;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 .site-header .subtitle {
-  margin: 0;
-  font-size: 13px;
-  opacity: 0.9;
+  margin: 6px 0 0 32px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-3);
+  letter-spacing: 0.005em;
 }
 
-/* ===== Controls (search + filters) ===== */
+/* =====================================================
+   Sticky controls
+   ===================================================== */
 .controls {
   display: flex;
-  gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
-  padding: 12px 24px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  gap: 14px;
+  padding: 10px 28px;
+  background: rgba(250, 250, 249, 0.86);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border-2);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 30;
 }
+
 .search {
   position: relative;
-  flex: 1 1 280px;
-  min-width: 180px;
+  flex: 1 1 320px;
+  min-width: 200px;
   max-width: 480px;
 }
 .search input {
   width: 100%;
-  padding: 9px 36px 9px 36px;
+  height: 34px;
+  padding: 0 56px 0 32px;
   border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #f4f6fb url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235b6172' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") 12px center no-repeat;
-  font-size: 14px;
+  border-radius: var(--radius);
+  background:
+    var(--surface)
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c8c92' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>")
+    11px center no-repeat;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--text);
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color .15s, box-shadow .15s;
 }
+.search input::placeholder { color: var(--text-3); }
 .search input:focus {
-  border-color: var(--accent);
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: var(--text-3);
+  box-shadow: 0 0 0 4px var(--focus-ring);
 }
+.search-key {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  pointer-events: none;
+  transition: opacity .12s;
+}
+.search:focus-within .search-key,
+.search.has-value .search-key { opacity: 0; }
 .search-clear {
   position: absolute;
   right: 8px;
@@ -98,258 +190,383 @@ button { font: inherit; }
   transform: translateY(-50%);
   width: 22px;
   height: 22px;
-  border-radius: 50%;
+  border-radius: 4px;
   border: none;
-  background: #d1d6e3;
-  color: #fff;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
+  background: var(--surface-3);
+  color: var(--text-2);
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+  cursor: pointer;
 }
-.search-clear:hover { background: #9aa1b3; }
+.search-clear:hover { background: var(--text); color: #fff; }
 
+/* Suggest dropdown */
 .suggest {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
   margin: 0;
-  padding: 4px 0;
+  padding: 4px;
   list-style: none;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  max-height: 320px;
+  border-radius: var(--radius);
+  max-height: 360px;
   overflow-y: auto;
   z-index: 50;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow);
 }
 .suggest li {
-  padding: 8px 14px;
+  padding: 8px 10px;
   cursor: pointer;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: baseline;
-  justify-content: space-between;
   gap: 8px;
-  border-left: 3px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: background-color .1s;
 }
+.suggest li::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--text-4);
+  align-self: center;
+}
+.suggest li.cat-人文系::before { background: var(--cat-humanities); }
+.suggest li.cat-社会系::before { background: var(--cat-social); }
+.suggest li.cat-総合系::before { background: var(--cat-general); }
 .suggest li:hover,
 .suggest li.active {
-  background: #eef2ff;
-  border-left-color: var(--accent);
+  background: var(--surface-2);
 }
-.suggest li.cat-人文系 { border-left-color: var(--cat-humanities); }
-.suggest li.cat-社会系 { border-left-color: var(--cat-social); }
-.suggest li.cat-総合系 { border-left-color: var(--cat-general); }
-.suggest .s-name { font-weight: 600; color: var(--text); font-size: 14px; }
-.suggest .s-meta { font-size: 11px; color: var(--text-sub); white-space: nowrap; }
-.suggest mark { background: #fff59d; color: inherit; padding: 0 1px; border-radius: 2px; }
+.suggest .s-name { font-weight: 500; color: var(--text); font-size: 13px; }
+.suggest .s-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  white-space: nowrap;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+.suggest mark {
+  background: #fff3a3;
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
 .suggest .s-empty {
-  padding: 12px 14px;
-  color: var(--text-sub);
-  font-size: 13px;
+  padding: 14px;
+  color: var(--text-3);
+  font-size: 12.5px;
   text-align: center;
   cursor: default;
+  display: block;
 }
-.suggest .s-empty:hover { background: transparent; border-left-color: transparent; }
+.suggest .s-empty::before { display: none; }
+.suggest .s-empty:hover { background: transparent; }
 
-@keyframes card-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6), var(--shadow-md); }
-  60% { box-shadow: 0 0 0 14px rgba(37, 99, 235, 0), var(--shadow-md); }
-  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), var(--shadow-md); }
-}
-.card.highlight {
-  animation: card-pulse 1.6s ease-out;
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-  z-index: 2;
-}
-
+/* Filters — segmented control */
 .filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: inline-flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px;
+  gap: 0;
 }
 .filter-btn {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--text-sub);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  font-size: 13px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .12s, background .12s, box-shadow .12s;
 }
-.filter-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
+.filter-btn:hover { color: var(--text); }
 .filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-xs);
 }
+.filter-btn .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--text-4);
+  display: inline-block;
+}
+.filter-btn[data-cat="人文系"] .dot { background: var(--cat-humanities); }
+.filter-btn[data-cat="社会系"] .dot { background: var(--cat-social); }
+.filter-btn[data-cat="総合系"] .dot { background: var(--cat-general); }
 
-/* ===== Day tabs (mobile) ===== */
+/* =====================================================
+   Mobile day-tabs
+   ===================================================== */
 .day-tabs {
   display: none;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: rgba(250, 250, 249, 0.86);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border-2);
   position: sticky;
-  top: 58px;
-  z-index: 9;
+  top: 54px;
+  z-index: 20;
+  padding: 0;
 }
 .day-tab {
   flex: 1;
-  padding: 10px 0;
+  padding: 12px 0;
   border: none;
   background: transparent;
-  color: var(--text-sub);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.15s;
+  color: var(--text-3);
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  min-height: 44px;
+  border-bottom: 2px solid transparent;
+  transition: color .12s, border-color .12s;
 }
 .day-tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--text);
+  border-bottom-color: var(--text);
 }
 
-/* ===== Main / Sections ===== */
+/* =====================================================
+   Main / Sections
+   ===================================================== */
 main {
-  padding: 18px 24px 40px;
+  padding: 24px 28px 96px;
   max-width: 1400px;
   margin: 0 auto;
 }
+.block { margin-bottom: 22px; }
+.block-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 4px 4px 10px;
+}
 .section-title {
-  margin: 8px 0 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-sub);
-}
-
-/* ===== Timetable Grid ===== */
-.timetable {
-  display: grid;
-  grid-template-columns: 56px repeat(5, 1fr);
-  gap: 6px;
-  background: var(--surface);
-  padding: 10px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-}
-.th {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text-sub);
-  background: #f1f3f9;
-  border-radius: 6px;
-  padding: 8px 4px;
-}
-.th-corner { background: transparent; }
-.th-period {
-  flex-direction: column;
+  margin: 0;
   font-size: 11px;
-  line-height: 1.2;
-  color: var(--text-sub);
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
-.th-period .num {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.cell {
-  background: #fafbfd;
-  border-radius: 6px;
-  padding: 6px;
-  min-height: 110px;
-  max-height: 320px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.cell:empty::after {
-  content: "—";
-  color: #c5c9d4;
-  font-size: 12px;
-  margin: auto;
+.section-count {
+  font-size: 11px;
+  color: var(--text-3);
+  font-feature-settings: "tnum";
 }
 
 .empty-msg {
   text-align: center;
-  color: var(--text-sub);
+  color: var(--text-3);
   padding: 24px 12px;
   margin: 0;
+  font-size: 13px;
 }
 
-/* ===== Course Card ===== */
-.card {
+/* =====================================================
+   Timetable grid
+   ===================================================== */
+.timetable {
+  display: grid;
+  grid-template-columns: 46px repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border-2);
+  padding: 1px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-2);
+  overflow: hidden;
+}
+.th {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-left-width: 4px;
-  border-radius: 6px;
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  padding: 10px 6px;
   font-size: 12px;
-  position: relative;
+  font-weight: 500;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.04em;
 }
-.card:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+.th-day {
+  font-weight: 600;
+  color: var(--text-2);
 }
-.card .name {
+.th-corner { background: var(--surface); }
+.th-period {
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.05;
+}
+.th-period .num {
+  font-size: 16px;
   font-weight: 600;
   color: var(--text);
+  letter-spacing: -0.01em;
+}
+.th-period > span:last-child {
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.cell {
+  background: var(--surface);
+  padding: 6px;
+  min-height: 124px;
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.cell:empty::after {
+  content: "";
+  display: block;
+  margin: auto;
+  width: 14px;
+  height: 1px;
+  background: var(--border);
+}
+
+/* =====================================================
+   Course card
+   ===================================================== */
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 28px 8px 10px;
+  cursor: pointer;
+  transition: border-color .12s, box-shadow .12s, transform .12s;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
+}
+.card .name-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 1px;
+}
+.card .cat-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  margin-top: 5px;
+  background: var(--text-4);
+}
+.card.cat-人文系 .cat-dot { background: var(--cat-humanities); }
+.card.cat-社会系 .cat-dot { background: var(--cat-social); }
+.card.cat-総合系 .cat-dot { background: var(--cat-general); }
+.card .name {
   font-size: 13px;
-  margin-bottom: 2px;
-  line-height: 1.3;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  letter-spacing: -0.005em;
 }
 .card .teacher {
-  color: var(--text-sub);
-  font-size: 11px;
-  margin-bottom: 4px;
+  color: var(--text-3);
+  font-size: 11.5px;
+  line-height: 1.3;
+  padding-left: 13px;
 }
 .card .code-link {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  color: var(--accent);
-  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-3);
   padding: 1px 6px;
   border-radius: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  letter-spacing: 0;
+  margin-top: 4px;
+  margin-left: 13px;
+  align-self: flex-start;
+  transition: background .12s, color .12s, border-color .12s;
 }
-.card .code-link::after {
-  content: "↗";
-  font-size: 10px;
+.card .code-link::after { content: "↗"; font-size: 10px; opacity: 0.6; }
+.card .code-link:hover {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+  text-decoration: none;
+}
+.card .add-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+  opacity: 0;
+  transition: opacity .15s, background .12s, color .12s, border-color .12s, transform .12s;
+}
+.card:hover .add-btn,
+.card:focus-within .add-btn,
+.card.selected .add-btn { opacity: 1; }
+.card .add-btn svg { width: 14px; height: 14px; }
+.card .add-btn:hover {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}
+.card.selected {
+  border-color: var(--accent);
+  background: linear-gradient(to right, rgba(29, 29, 31, 0.04), var(--surface) 90%);
+}
+.card.selected .add-btn {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
 }
 .card .note-tag {
   display: inline-block;
   font-size: 10px;
   margin-left: 4px;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: #fff3cd;
-  color: #8a6100;
+  padding: 0 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
   vertical-align: middle;
+  font-weight: 500;
+  line-height: 16px;
 }
-
-/* category accents */
-.card.cat-人文系 { border-left-color: var(--cat-humanities); background: var(--cat-humanities-bg); }
-.card.cat-社会系 { border-left-color: var(--cat-social);     background: var(--cat-social-bg); }
-.card.cat-総合系 { border-left-color: var(--cat-general);    background: var(--cat-general-bg); }
 
 /* category filter dim */
 .timetable.filter-人文系 .card:not(.cat-人文系),
@@ -358,169 +575,703 @@ main {
 .intensive.filter-人文系 .card:not(.cat-人文系),
 .intensive.filter-社会系 .card:not(.cat-社会系),
 .intensive.filter-総合系 .card:not(.cat-総合系) {
-  opacity: 0.18;
+  opacity: 0.25;
   filter: saturate(0.4);
 }
 
-/* search hide */
+/* search hidden */
 .card.search-hidden { display: none; }
-body.searching .cell:empty::after { content: ""; }
+body.searching .cell:empty::after { content: none; }
 
-/* highlight (match) */
+/* highlight pulse */
+@keyframes card-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(29, 29, 31, 0.42), var(--shadow); }
+  70%  { box-shadow: 0 0 0 12px rgba(29, 29, 31, 0),    var(--shadow); }
+  100% { box-shadow: 0 0 0 0 rgba(29, 29, 31, 0),       var(--shadow); }
+}
+.card.highlight {
+  animation: card-pulse 1.4s ease-out;
+  border-color: var(--accent);
+}
+
+/* card text highlight */
 .card mark {
-  background: #fff59d;
+  background: #fff3a3;
   color: inherit;
   padding: 0 1px;
   border-radius: 2px;
 }
 
-/* ===== Intensive ===== */
+/* =====================================================
+   Intensive
+   ===================================================== */
 .intensive {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 8px;
-  background: var(--surface);
-  padding: 12px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  margin-top: 12px;
 }
-.intensive .card { padding: 10px 12px; }
-.intensive .card .name { font-size: 14px; }
+.intensive .card {
+  padding: 10px 30px 10px 12px;
+}
+.intensive .card .name { font-size: 13.5px; }
 
-/* ===== Modal ===== */
+/* =====================================================
+   Modal
+   ===================================================== */
 .modal {
-  width: min(720px, 92vw);
+  width: min(640px, 92vw);
   max-height: 86vh;
-  border: none;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 0;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
   background: var(--surface);
   color: var(--text);
+  overflow: hidden;
 }
 .modal::backdrop {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(17, 17, 19, 0.32);
   backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 .modal-close {
   position: absolute;
-  top: 10px;
+  top: 14px;
   right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
   background: transparent;
-  border: none;
-  font-size: 28px;
+  border: 1px solid transparent;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
-  color: var(--text-sub);
-  padding: 4px 8px;
+  color: var(--text-3);
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background .12s, color .12s, border-color .12s;
 }
-.modal-close:hover { color: var(--text); }
+.modal-close:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
 .modal-body {
-  padding: 24px 28px;
+  padding: 28px 32px 24px;
   overflow-y: auto;
   max-height: 86vh;
 }
 .modal-body h3 {
-  margin: 0 0 6px;
-  font-size: 20px;
-  padding-right: 32px;
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding-right: 44px;
+  line-height: 1.32;
 }
 .modal-body .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  color: var(--text-sub);
-  font-size: 13px;
-  margin-bottom: 16px;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-3);
+  font-size: 12px;
+  margin-bottom: 4px;
 }
 .modal-body .meta .chip {
-  background: #eef2ff;
-  color: var(--accent);
+  background: var(--surface-2);
+  color: var(--text-2);
   padding: 2px 10px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
-.modal-body section { margin-bottom: 14px; }
+.modal-body .meta .chip-cat {
+  color: var(--text);
+}
+.modal-body .meta .chip-cat::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--text-4);
+}
+.modal-body .meta .chip-cat[data-cat="人文系"]::before { background: var(--cat-humanities); }
+.modal-body .meta .chip-cat[data-cat="社会系"]::before { background: var(--cat-social); }
+.modal-body .meta .chip-cat[data-cat="総合系"]::before { background: var(--cat-general); }
+.modal-body .meta .chip-mono {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+}
+.modal-body .actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 18px 0 4px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-2);
+}
+.modal-body .btn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.modal-body .btn:hover {
+  background: var(--surface-2);
+  text-decoration: none;
+  border-color: var(--border-strong);
+}
+.modal-body .btn.primary {
+  background: var(--text);
+  border-color: var(--text);
+  color: #fff;
+}
+.modal-body .btn.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+.modal-body .btn.primary.added {
+  background: var(--surface);
+  color: var(--text);
+}
+.modal-body .btn svg { width: 14px; height: 14px; }
+.modal-body section {
+  margin: 18px 0;
+}
 .modal-body section h4 {
-  margin: 0 0 4px;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: var(--text-sub);
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
   text-transform: uppercase;
+  font-weight: 600;
 }
 .modal-body section p {
   margin: 0;
   white-space: pre-wrap;
-  line-height: 1.7;
+  line-height: 1.8;
+  font-size: 13.5px;
+  color: var(--text-2);
 }
-.modal-body .official-link {
+
+/* =====================================================
+   Schedule FAB
+   ===================================================== */
+.schedule-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 25;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-  padding: 11px 18px;
-  background: var(--accent);
+  gap: 8px;
+  height: 42px;
+  padding: 0 14px 0 14px;
+  border-radius: 999px;
+  background: var(--text);
   color: #fff;
-  border-radius: 8px;
-  font-weight: 600;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+  transition: transform .15s, box-shadow .15s, background .12s;
 }
-.modal-body .official-link:hover {
-  text-decoration: none;
-  background: #1d4fd6;
+.schedule-fab:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
 }
-
-/* ===== Footer ===== */
-.site-footer {
-  padding: 18px 24px 28px;
+.schedule-fab svg { color: rgba(255, 255, 255, 0.85); }
+.schedule-fab .fab-label { letter-spacing: 0.005em; }
+.schedule-fab .fab-count {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 11.5px;
+  min-width: 22px;
   text-align: center;
-  color: var(--text-sub);
-  font-size: 12px;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.schedule-fab .fab-credits {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
-/* ============================== */
-/* ===== Mobile (<= 720px) ====== */
-/* ============================== */
+/* =====================================================
+   Schedule panel (drawer)
+   ===================================================== */
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 19, 0);
+  z-index: 35;
+  transition: background .26s;
+}
+.panel-overlay.show {
+  background: rgba(17, 17, 19, 0.28);
+}
+
+.schedule-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(440px, 100vw);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.32,.72,.34,.96);
+  box-shadow: var(--shadow-lg);
+  visibility: hidden;
+}
+.schedule-panel[aria-hidden="false"] {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.panel-header {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border-2);
+}
+.panel-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-header h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.panel-stats {
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.panel-stats .ps-pair {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  white-space: nowrap;
+}
+.panel-stats strong {
+  color: var(--text);
+  font-weight: 600;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+.panel-stats .dot-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-4);
+}
+.panel-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 18px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.panel-close:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.panel-cat-totals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+}
+.panel-cat-total {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: var(--text-3);
+}
+.panel-cat-total .pct-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+.panel-cat-total .pct-label::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--text-4);
+}
+.panel-cat-total[data-cat="人文系"] .pct-label::before { background: var(--cat-humanities); }
+.panel-cat-total[data-cat="社会系"] .pct-label::before { background: var(--cat-social); }
+.panel-cat-total[data-cat="総合系"] .pct-label::before { background: var(--cat-general); }
+.panel-cat-total strong {
+  display: block;
+  font-size: 18px;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-top: 4px;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.panel-cat-total .unit {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-left: 2px;
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 8px;
+}
+
+.panel-empty {
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--text-3);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.panel-empty .icon {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  margin-bottom: 14px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+}
+.panel-empty strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Mini schedule grid */
+.panel-mini-grid {
+  display: grid;
+  grid-template-columns: 22px repeat(5, 1fr);
+  gap: 1px;
+  margin-bottom: 18px;
+  background: var(--border-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-2);
+  padding: 1px;
+  overflow: hidden;
+}
+.panel-mini-grid .mh {
+  background: var(--surface);
+  font-size: 10px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+  font-weight: 500;
+  min-height: 22px;
+}
+.panel-mini-grid .mh-period {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+.panel-mini-grid .mc {
+  background: var(--surface);
+  font-size: 10px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-4);
+  padding: 4px 3px;
+  text-align: center;
+  line-height: 1.15;
+  position: relative;
+}
+.panel-mini-grid .mc.has {
+  color: var(--text);
+  font-weight: 500;
+  background: var(--surface-2);
+  font-size: 10px;
+}
+.panel-mini-grid .mc.has::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 1.5px;
+  background: var(--text-4);
+}
+.panel-mini-grid .mc.cat-人文系::after { background: var(--cat-humanities); }
+.panel-mini-grid .mc.cat-社会系::after { background: var(--cat-social); }
+.panel-mini-grid .mc.cat-総合系::after { background: var(--cat-general); }
+.panel-mini-grid .mc.conflict {
+  background: rgba(244, 63, 94, 0.08);
+  color: #be123c;
+}
+.panel-mini-grid .mc.conflict::after { background: #f43f5e; }
+
+.panel-section {
+  margin-bottom: 18px;
+}
+.panel-section-title {
+  font-size: 10.5px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  padding: 0 4px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-section-title .pst-count {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+.panel-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-2);
+  margin-bottom: 4px;
+  background: var(--surface);
+  position: relative;
+  cursor: pointer;
+  transition: background .1s, border-color .1s;
+}
+.panel-item:hover {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+.panel-item .pi-main {
+  min-width: 0;
+}
+.panel-item .pi-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.panel-item .pi-name::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--text-4);
+  flex: 0 0 auto;
+}
+.panel-item.cat-人文系 .pi-name::before { background: var(--cat-humanities); }
+.panel-item.cat-社会系 .pi-name::before { background: var(--cat-social); }
+.panel-item.cat-総合系 .pi-name::before { background: var(--cat-general); }
+.panel-item .pi-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 1px;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+.panel-item .pi-conflict {
+  background: rgba(244, 63, 94, 0.12);
+  color: #be123c;
+  padding: 0 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  border: 1px solid rgba(244, 63, 94, 0.18);
+}
+.panel-item .pi-remove {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 0;
+  flex: 0 0 auto;
+  transition: background .1s, color .1s, border-color .1s;
+}
+.panel-item .pi-remove svg { width: 14px; height: 14px; }
+.panel-item .pi-remove:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.panel-footer {
+  border-top: 1px solid var(--border-2);
+  padding: 12px 14px calc(12px + var(--safe-bottom));
+  display: flex;
+  gap: 8px;
+}
+.panel-footer button {
+  flex: 1;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.panel-footer button:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.panel-footer button.primary {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}
+.panel-footer button.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* =====================================================
+   Toast
+   ===================================================== */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translate(-50%, 12px);
+  background: var(--text);
+  color: #fff;
+  font-size: 12.5px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transition: opacity .18s, transform .18s;
+  z-index: 60;
+  pointer-events: none;
+  font-weight: 500;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* =====================================================
+   Site footer
+   ===================================================== */
+.site-footer {
+  padding: 20px 28px 28px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 11.5px;
+}
+
+/* =====================================================
+   Mobile <= 720px
+   ===================================================== */
 @media (max-width: 720px) {
   body { font-size: 14px; }
 
-  .site-header { padding: 18px 14px 14px; }
-  .site-header h1 { font-size: 17px; }
-  .site-header .subtitle { font-size: 12px; }
+  .site-header-inner { padding: 22px 16px 16px; }
+  .site-header h1 { font-size: 18px; }
+  .site-header .subtitle { font-size: 11.5px; margin-left: 32px; }
 
   .controls {
-    padding: 10px 12px;
+    padding: 8px 12px;
     gap: 8px;
     flex-direction: column;
     align-items: stretch;
+    top: 0;
   }
   .search { max-width: none; flex: none; }
-  .filters { justify-content: space-between; }
-  .filter-btn {
-    flex: 1;
-    text-align: center;
-    padding: 7px 4px;
-    font-size: 12px;
-  }
+  .search input { height: 38px; font-size: 14.5px; padding: 0 38px 0 32px; }
+  .search-key { display: none; }
 
-  /* show day tabs on mobile */
+  .filters {
+    width: 100%;
+  }
+  .filter-btn { flex: 1; justify-content: center; min-height: 32px; padding: 0 4px; }
+
   .day-tabs {
     display: flex;
+    top: 100px;
   }
 
-  main { padding: 10px 10px 30px; }
-  .section-title { font-size: 14px; margin: 4px 0 8px; }
+  main { padding: 14px 10px 96px; }
+  .block { margin-bottom: 18px; }
 
-  /* Mobile timetable: show only the active day column */
+  /* mobile: single-day column */
   .timetable {
-    grid-template-columns: 44px 1fr;
-    gap: 4px;
-    padding: 6px;
+    grid-template-columns: 38px 1fr;
+    gap: 1px;
   }
   .timetable .th-day { display: none; }
   .timetable .cell { display: none; }
-
   .timetable[data-active-day="月"] .col-月,
   .timetable[data-active-day="月"] .cell[data-day="月"],
   .timetable[data-active-day="火"] .col-火,
@@ -533,45 +1284,78 @@ body.searching .cell:empty::after { content: ""; }
   .timetable[data-active-day="金"] .cell[data-day="金"] {
     display: flex;
   }
-  .timetable .th-day { /* the day name is shown in the day-tabs nav */ }
-
   .cell {
-    min-height: auto;
+    min-height: 80px;
     max-height: none;
     padding: 6px;
     gap: 6px;
   }
-  /* don't show "—" in the limited mobile cell layout if empty */
-  .cell:empty::after { font-size: 11px; }
 
   .card {
-    padding: 9px 11px;
-    font-size: 13px;
+    padding: 10px 32px 10px 12px;
+    min-height: 56px;
   }
   .card .name { font-size: 14px; }
-  .card .teacher { font-size: 12px; }
+  .card .teacher { font-size: 12px; padding-left: 13px; }
   .card .code-link { font-size: 11px; }
-
-  .intensive {
-    grid-template-columns: 1fr;
-    padding: 8px;
+  .card .add-btn {
+    opacity: 1;
+    width: 26px;
+    height: 26px;
+    top: 7px;
+    right: 7px;
   }
+  .card .add-btn svg { width: 15px; height: 15px; }
 
+  .intensive { grid-template-columns: 1fr; }
+  .intensive .card { padding: 12px 36px 12px 14px; }
+
+  /* Modal becomes bottom-sheet */
   .modal {
     width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
+    max-width: 100vw;
+    max-height: 92vh;
+    margin: auto 0 0;
+    border-radius: 14px 14px 0 0;
+    border-width: 1px 0 0 0;
+    align-self: end;
+    position: fixed;
+    inset: auto 0 0 0;
+    padding-bottom: var(--safe-bottom);
   }
-  .modal-body {
-    padding: 50px 18px 28px;
-    max-height: 100vh;
+  .modal::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--text-4);
+    margin: 8px auto 0;
   }
+  .modal-body { padding: 14px 18px 28px; max-height: calc(92vh - 16px); }
   .modal-body h3 { font-size: 18px; }
-  .modal-close {
-    top: 8px;
-    right: 8px;
-    font-size: 32px;
-    padding: 6px 12px;
+
+  /* Schedule drawer full-width */
+  .schedule-panel { width: 100vw; }
+  .schedule-fab {
+    bottom: 16px;
+    right: 16px;
+    height: 44px;
+  }
+}
+
+/* Tap feedback */
+@media (hover: none) {
+  .card .add-btn { opacity: 1; }
+  .card:active { transform: scale(0.99); }
+  .filter-btn:active { background: var(--surface); }
+  .day-tab:active { color: var(--text); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
   }
 }
